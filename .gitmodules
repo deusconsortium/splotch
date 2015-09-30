@@ -1,0 +1,3 @@
+[submodule "reader/FOFReaderLib"]
+	path = reader/FOFReaderLib
+	url = https://github.com/pasdeloup/FOFReaderLib

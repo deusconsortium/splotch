@@ -1,0 +1,112 @@
+############################
+# Input/Output Options
+############################
+
+# Input cube file/directory
+infile=/data_bingo/Babel/boxlen648_n256_rpcdmw5/cube_00013/
+
+# Input strct/masst directory (if exists)
+#infile_halos=/efiler1/deus_fur/boxlen21000_n8192_lcdmw7/post/output_sample/output_ncoarse_00473/
+
+#infile_special2=/data/home/jpasdeloup/SVN/splotch-6.0/particles_in_void_wcdm_28766.txt
+
+infile_extrema=/data/home/jpasdeloup/data/Voids/boxlen648_n256_rpcdmw5_00013/
+
+# Output file
+outfile=slice_void_test256_
+xres=1000
+yres=1000
+
+# Set the slice boundaries
+#maxX=	0.4563096571
+#minX=	0.4363096571
+#maxY=	0.5674246333
+#minY=	0.5474246333
+#maxZ=	0.4664474714
+#minZ=	0.4644474714
+
+minX=	0.0
+maxX=	1.0
+
+minY=	0.0
+maxY=	1.0
+
+minZ=	0.24
+maxZ=	0.26
+
+# Normalize data to be centered on 0.0 +/- 0.5
+normalize_coords=TRUE
+
+############################
+# Display Options
+############################
+
+# 6: mesh reader, 7: hdf7, 14: fof_cube, 11: fof_strct
+simtype=14
+
+ptypes=1
+resolution=256
+
+color_label0=V
+color_present0=1
+color_is_vector0=FALSE
+color_log0=TRUE
+
+color_label1=V
+color_present1=1
+color_is_vector1=FALSE
+color_log1=TRUE
+
+color_label2=V
+color_present2=1
+color_is_vector2=FALSE
+color_log2=TRUE
+
+############################
+# Output Options
+############################
+
+# 0: TGA uncompressed, 1: PPM ASCII, 2: PPM binary, 3: TGA runlength-compressed
+pictype=0
+
+gray_absorption=0.5
+
+
+############################
+# Visualization properties
+############################
+a_eq_e=t
+
+# 0: nosort, 1: by z, 2: by value, 3: by reversed value, 4: by size
+sort_type=0
+
+intensity_log0=true
+color_is_vector0=false
+palette0=palettes/Blue.pal #palettes/NewSplotch.pal #palettes/OldSplotch.pal
+brightness0=0.003
+
+intensity_log1=true
+color_is_vector1=false
+palette1=palettes/AllRed.pal #palettes/NewSplotch.pal #palettes/OldSplotch.pal
+brightness1=0.01
+
+############################
+# Geometrical setup
+############################
+
+camera_x=      0.0
+camera_y=      0.0
+camera_z=      1.22
+lookat_x=      0.0
+lookat_y=      0.0
+lookat_z=      0.0
+sky_x=0.0
+sky_y=1.0
+sky_z=0.0
+
+fov=45
+
+periodic=FALSE
+projection=FALSE
+
+

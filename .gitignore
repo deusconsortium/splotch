@@ -1,0 +1,7 @@
+Splotch6
+*.o
+*.log
+*.tga
+*~
+nbproject/
+

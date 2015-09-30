@@ -1,6 +1,14 @@
   *************************************************************
-  *                         Splotch                           *
+  *                   Splotch DEUS version                    *
   *                                                           *
+  *************************************************************
+
+This version is a fork able to read DEUS file format
+http://www.deus-consortium.org/
+
+It uses FOFReaderLib as a submodule, do a git clone --recursive
+to get it automatically
+
   *************************************************************
 
   Authors of Splotch:

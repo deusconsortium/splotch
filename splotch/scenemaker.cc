@@ -810,6 +810,17 @@ void sceneMaker::fetchFiles(vector<particle_sim> &particle_data, double fidx)
     case 13:
       ramses_reader(params,particle_data);
       break;
+      
+     case 14:
+          fofcube_reader(params,particle_data, boxsize);
+          break;
+     case 15:
+          fofstrct_reader(params,particle_data, boxsize);
+          break;
+     case 16:
+          fofmasst_reader(params,particle_data, boxsize);
+          break;      
+      
     }
   mpiMgr.barrier();
   tstack_pop("Reading");
