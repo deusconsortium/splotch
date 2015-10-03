@@ -102,8 +102,6 @@ void fofcube_reader(paramfile &params, std::vector<particle_sim> &points, double
 
     float scale = params.find<float>("scale", 1);
     
-    std::cout << "IT'S THE RIGHT FILE ! " << std::endl;
-        
     // clear the points
     points.clear();
 
@@ -229,29 +227,30 @@ void fofcube_reader(paramfile &params, std::vector<particle_sim> &points, double
             {
               haloparticles.insert(std::pair<long long, char>(id, n));
             }
-        }
-        
+        }        
     }
     
     
     ///////////////////////
+    
+    float radius = params.find<float>("force_radius", 0.0);
+        if(radius == 0.0) {
+            radius = scale / resolution / 2.0f; // / 2.0f; // / 2.0f; /// (2.0f);// / (2.0f * 2.0f * 2.0f);  // = scale/res / refine_moy
+        }
 
     if (mySimulation->cubes() > 0) {
 
         //std::cout << "loading " << rootfile << std::endl;
         
-        float radius = params.find<float>("force_radius", 0.0);
-        if(radius == 0.0) {
-            radius = scale / resolution / 2.0f; // / 2.0f; // / 2.0f; /// (2.0f);// / (2.0f * 2.0f * 2.0f);  // = scale/res / refine_moy
-        }
-
         FOFMultiCube *multi = mySimulation->cubes();
         
         std::vector<particle_sim> *partperfile = new std::vector<particle_sim>[multi->nCubes()];
         
+        long int totalNpart = 0;
+        
         #pragma omp parallel for num_threads(64) schedule(dynamic,1)
         for (int n = 0; n < multi->nCubes(); n++) { // 704
-
+            
             if (area->cubeIntersect(multi->cubes(n)->boundaries())) {
                 
                 if (multi->cubes(n)->position().size() == 0) {
@@ -341,17 +340,71 @@ void fofcube_reader(paramfile &params, std::vector<particle_sim> &points, double
         }
         std::cout << "Merging..." << std::endl;
         // Merge results
-        for (int i = 0; i < multi->nCubes(); i++) {            
+        for (int i = 0; i < multi->nCubes(); i++) {
+            totalNpart += multi->cubes(i)->npart();
             points.insert(points.end(),partperfile[i].begin(),partperfile[i].end());
         }
         delete[] partperfile;
+        
+        /*
+         *  Management for "extrema" particles
+         * /
+         */
+        
+        std::cout << "Ok, added " << points.size() << "/" << totalNpart << " particles." << std::endl;
+        
+        std::cout << "Scale is : " << scale << std::endl;
+        
+        for(int n=1; n<99; n++) {
+            char specialfilename[100];
+            sprintf(specialfilename,"infile_extrema%d",n);
+            if(params.find<string>(specialfilename, "") != "") {
+                std::cout << "Should read " << params.find<string>(specialfilename, "") << " for #" << n << std::endl;
+                FOFExtrema *extrema = new FOFExtrema(params.find<string>(specialfilename, ""));
+                
+                int nExtrema = 1;
+                
+                for (long int j = 0; j < extrema->nExtrema(); j++) {
+
+                    float x = extrema->extremum(j)->x();
+                    float y = extrema->extremum(j)->y();
+                    float z = extrema->extremum(j)->z();
+                    
+                    if (area->particuleIsInside(x, y, z)) {
+
+                        particle_sim particle;
+                        
+                        particle.x = x * scale;
+                        particle.y = y * scale;
+                        particle.z = z * scale;
+                        particle.I = 1.0f;
+                        particle.active = true;
+                        particle.e.r = 1.0f;
+                        particle.e.g = NULL;
+                        particle.e.b = NULL;
+                        particle.r = radius;
+                        particle.type = n;
+                        
+                        points.push_back(particle);
+                                                
+                        nExtrema++;
+                        
+                    }
+                }
+                
+                std::cout << "Ok, added " << nExtrema << "/" << extrema->nExtrema() << " extrema." << std::endl;
+            }
+        }
+                
         delete[] boundaries;
-        delete area;
+        delete area;        
+        
         
 
         // END READ CUBE
 
-        std::cout << "Ok, read " << points.size() << "/" << npart << " particles." << std::endl;
+        std::cout << "TOTAL pseudo-particles to display= " << points.size() << std::endl;
+        
         std::cout << "minH= " << minH << " maxH= " << maxH << std::endl;
         std::cout
                 << "minX=" << minX << ", maxX=" << maxX
